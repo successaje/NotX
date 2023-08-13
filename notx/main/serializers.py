@@ -3,4 +3,5 @@ from models import Alert
 
 
 class AlertSerializer(serializers.Serializer):
+    pass
     # id = se
