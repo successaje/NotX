@@ -54,7 +54,7 @@ class RegisterSerializer(serializers.ModelSerializer):
         )
         store = attrs.get(
             "store",
-            ""
+            "",
         )
 
         if not username.isalnum():

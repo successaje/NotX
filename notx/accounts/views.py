@@ -24,6 +24,40 @@ from drf_yasg import openapi
 
 import jwt
 
+
+class ProfileAPIView(views.APIView):
+    queryset = User.objects.filter(id__gte=0)
+    #lookup_field = 'id'
+    serializer_class = UserDetailSerializer
+    #permission_classes = []
+
+
+class RegisterAPIView(views.APIView):
+    permission_classes = [AllowAny]
+    def post(self, request):
+        try:
+            data =request.data
+            serializer = RegisterSerializer(data=data)
+            if serializer.is_valid():
+                serializer.save()
+                user_data = serializer.data
+                send_otp_via_email(user_data['email'])
+
+                return Response({
+                    'message' : 'Registration successful, check email'
+                },
+                user_data, status = status.HTTP_201_CREATED
+                )
+            
+            return Response({
+                "status" : 400,
+                'message' : 'Something went wrong! please try again',
+                'data' : serializer.errors
+            })
+        
+        except Exception as e:
+            return (e)
+
 class RegisterView(generics.GenericAPIView):
 
     serializer_class = RegisterSerializer
@@ -171,3 +205,49 @@ class SetNewPasswordAPIView(generics.GenericAPIView):
             'success':True,
             'message': 'Password reset successfully done',
         }, status=status.HTTP_200_OK)
+    
+
+class VerifyOTP(views.APIView):
+    def post(self, request):
+        try:
+            data = request.data
+            serializer = VerifyAccountSerializer(data=data)
+
+            if serializer.is_valid():
+                email = serializer.data['email']
+                otp = serializer.data['otp']
+
+                user =  User.objects.filter(email = email)
+                if not user.exists():
+                    return Response({
+                    "status" : 400,
+                    'message' : 'Something went wrong!',
+                    'data' : "Invalid email"
+                })
+
+                if user[0].otp != otp:
+                    return Response({
+                    "status" : 400,
+                    'message' : 'Something went wrong! please try again',
+                    'data' : "You entered a wrong OTP"
+                })
+
+                user = user.first()
+                user.is_verified = True
+                user.save() 
+
+                return Response(
+                    {
+                    'message' : 'Account Verified',
+                    'data' : {}
+                }, status=status.HTTP_200_OK
+                )
+            
+            return Response({
+                "status": 400,
+                "message": "something went wrong",
+                "data" : serializer.errors
+            })
+        except Exception as e:
+            return (e)
+
