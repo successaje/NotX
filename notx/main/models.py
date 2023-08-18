@@ -1,6 +1,6 @@
 from django.db import models
-from django.contrib.auth.models import User
-import rules
+from ..accounts.models import User
+# import rules
 
 
 
@@ -9,6 +9,7 @@ class Alert(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE, default=1)
     product_name = models.CharField(max_length=200)
     expiry_date = models.DateTimeField()
+    batch_no = models.CharField(default = "true")
 
     class Meta:
         ordering = ["expiry_date"]
@@ -17,4 +18,5 @@ class Alert(models.Model):
         return f"{self.title} at {self.time}"
     def get_absolute_url(self):
         return "/"
+    
     
