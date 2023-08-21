@@ -19,7 +19,7 @@ class AlertListAPIView(ListCreateAPIView):
     def get_queryset(self):
         return self.queryset.filter(Author=self.request.user)
 
-class EssayDetailAPIView(RetrieveUpdateDestroyAPIView):
+class AlertDetailAPIView(RetrieveUpdateDestroyAPIView):
 
     serializer_class = AlertSerializer
     queryset = Alert.objects.all()
