@@ -11,7 +11,7 @@ Notification System: Users receive notifications via email or other channels whe
 Installation and Setup
 
 Clone the Repository:
-git clone https://github.com/your-username/product-expiry-alert.git
+git clone ...
 cd product-expiry-alert
 
 Create a Virtual Environment (Optional but Recommended):
