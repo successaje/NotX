@@ -11,6 +11,11 @@ https://docs.djangoproject.com/en/4.2/ref/settings/
 """
 
 from pathlib import Path
+import os
+import datetime
+import json
+
+
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -26,6 +31,8 @@ SECRET_KEY = 'django-insecure-wk8#!)xe%(b=6jf(65fh-i89572w97sn8o@c50!5q_o$9j)0_p
 DEBUG = True
 
 ALLOWED_HOSTS = []
+
+AUTH_USER_MODEL = "account.User"
 
 
 # Application definition
@@ -44,6 +51,17 @@ INSTALLED_APPS = [
     "rest_framework",
     'rest_framework.authtoken',
 ]
+
+SWAGGER_SETTINGS = {
+    'SECURITY_DEFINITIONS': {
+        'Bearer': {
+            'type': 'apiKey',
+            'name': 'Authorization',
+            'in':'header'
+        }
+    }
+}
+
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
@@ -98,6 +116,13 @@ REST_FRAMEWORK = {
     ]
 
 }
+
+
+SIMPLE_JWT = {
+    'ACCESS_TOKEN_LIFETIME': datetime.timedelta(minutes=10),
+    'REFRESH_TOKEN_LIFETIME': datetime.timedelta(days=1),
+}
+
 
 
 # Password validation
