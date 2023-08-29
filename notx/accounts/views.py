@@ -28,7 +28,7 @@ import jwt
 class ProfileAPIView(views.APIView):
     queryset = User.objects.filter(id__gte=0)
     #lookup_field = 'id'
-    serializer_class = UserDetailSerializer
+    # serializer_class = UserDetailSerializer
     #permission_classes = []
 
 
