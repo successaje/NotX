@@ -10,4 +10,7 @@ class AlertSerializer(serializers.Serializer):
             "title", "product_name", "expiry_date", "batch_no"
         ]
 
+        def validate(self, attrs):
+            pass
+
         # def __init__(self, attrs)
