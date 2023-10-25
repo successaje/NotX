@@ -1,10 +1,10 @@
 from django.test import TestCase, Client
-from .views import taskCreate, taskList,taskDetail,taskDelete,taskUpdate
-from .models import Task
+from .views import alertCreate, alertList, alertDetail, alertDelete, alertUpdate
+from .models import Alert
 import json
 from rest_framework import status
 from django.urls import reverse
-from .serializers import TaskSerializer
+from .serializers import AlertSerializer
 
 from rest_framework.response import Response
 
@@ -32,58 +32,65 @@ class CreateAlertTest(TestCase):
         )
         self.assertEqual(response.status_code, status.HTTP_201_CREATED)
 
-    def test_create_invalid_task(self):
+    def test_create_invalid_alert(self):
         response = client.post(
-            reverse(taskCreate),
+            reverse(alertCreate),
             data=json.dumps(self.invalid_payload),
             content_type='application/json'
         )
         self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
 
 
-class TaskListTest(TestCase):
+class AlertListTest(TestCase):
     def setUp(self):
-        self.task_list = reverse(taskList)
-    def test_task_list_GET(self):
-        response = self.client.get(self.task_list)
+        self.alert_list = reverse(alertList)
+    def test_alert_list_GET(self):
+        response = self.client.get(self.alert_list)
         self.assertEqual(response.status_code, status.HTTP_200_OK)
 
-class TaskDetailTest(TestCase):
+class AlertDetailTest(TestCase):
     def setUp(self):
-        self.test_task = Task.objects.create(title='new_task_title',content='new_tast_content',completed=True)
-    def test_task_detail_GET(self):
-        response = client.get(reverse(taskDetail,kwargs={'pk':self.test_task.pk}))
-        task = Task.objects.get(pk=self.test_task.pk)
-        serializer = TaskSerializer(task)
+        self.test_alert = Alert.objects.create(title='new_alert_title',content='new_alert_content',completed=True)
+    def test_alert_detail_GET(self):
+        response = client.get(reverse(alertDetail,kwargs={'pk':self.test_alert.pk}))
+        alert = Alert.objects.get(pk=self.test_alert.pk)
+        serializer = AlertSerializer(alert)
         self.assertEqual(response.data, serializer.data)
         self.assertEqual(response.status_code,status.HTTP_200_OK)
 
-class TaskDeleteTest(TestCase):
+class AlertDeleteTest(TestCase):
     def setUp(self):
-        self.test_task = Task.objects.create(title='new_task_title',content='new_tast_content',completed=True)
-    def test_task_delete_DELETE(self):
-        response = client.delete(reverse(taskDelete, kwargs={'pk': self.test_task.pk}))
+        self.test_alert = Alert.objects.create(title='new_alert_title',content='new_alert_content',completed=True)
+    def test_alert_delete_DELETE(self):
+        response = client.delete(reverse(alertDelete, kwargs={'pk': self.test_alert.pk}))
         self.assertEqual(response.status_code, status.HTTP_200_OK)
 
-class TaskUpdateTest(TestCase):
+class AlertUpdateTest(TestCase):
     def setUp(self):
-        self.test_task = Task.objects.create(title='new_task_title',content='new_tast_content',completed=True)
+        self.test_alert = Alert.objects.create(title='new_alert_title',content='new_alert_content',completed=True)
         self.update_payload = {
-            'title': 'updated',
-            'content': 'updated',
-            'completed': True
+            'title': 'Updated Unkowns',
+            'product_name': 'Updated Pringles',
+            'expiry_date': "Updated 27-10-2023",
+            "expired": False
         }
-    def test_task_update_POST(self):
-        response = client.post(reverse(taskUpdate,kwargs={'pk':self.test_task.pk}),
-                               data=json.dumps(self.update_payload),
-                               content_type='application/json'
+    def test_alert_update_POST(self):
+        response = client.post(
+            reverse(
+                alertUpdate,
+                kwargs={
+                    'pk':self.test_alert.pk
+                }
+            ),
+            data=json.dumps(self.update_payload),
+            content_type='application/json'
         )
-        self.test_task.refresh_from_db()
+        self.test_alert.refresh_from_db()
         self.assertEqual(response.status_code,status.HTTP_200_OK)
-        self.assertEqual(self.test_task.title, 'updated')
+        self.assertEqual(self.test_alert.title, 'updated')
 
 
-class TestTaskModel(TestCase):
+class TestAlertModel(TestCase):
     def test_model_str(self):
-        title = Task.objects.create(title='title')
+        title = Alert.objects.create(title='title')
         self.assertEqual(str(title), 'title')
