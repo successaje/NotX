@@ -1,6 +1,6 @@
 from rest_framework import serializers
-from models import Alert
-from ..accounts.models import User
+from .models import Alert
+# from ..accounts.models import User
 
 
 class AlertSerializer(serializers.Serializer):

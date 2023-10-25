@@ -11,7 +11,7 @@ class Alert(models.Model):
     product_name = models.CharField(max_length=200)
     expiry_date = models.DateTimeField()
     updated = models.DateTimeField(auto_now=True)
-    batch_no = models.CharField(default = "true")
+    batch_no = models.CharField(max_length=200, default = "true")
     expired = models.BooleanField(default=False, blank=False)
 
     objects = models.Manager()
