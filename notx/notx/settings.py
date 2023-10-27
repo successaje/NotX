@@ -32,7 +32,7 @@ DEBUG = True
 
 ALLOWED_HOSTS = []
 
-# AUTH_USER_MODEL = "accounts.User"
+AUTH_USER_MODEL = "users.User"
 
 
 # Application definition
@@ -46,6 +46,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     "main",
     "corsheaders",
+    "users",
     # "rules",
     # "djangorestframework",
     "rest_framework",
