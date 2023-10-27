@@ -11,10 +11,12 @@ from django.contrib.sites.shortcuts import get_current_site
 from django.contrib.auth.tokens import PasswordResetTokenGenerator
 
 from rest_framework import generics, status, views
+from rest_framework.permissions import AllowAny
 from rest_framework.response import Response
 from rest_framework_simplejwt.tokens import RefreshToken
+from rest_framework_simplejwt.views import TokenObtainPairView
 
-from .serializers import EmailVerificationSerializer, PasswordTokenCheckSerializer, RegisterSerializer, LoginSerializer, ResetPasswordEmailRequestSerializer, SetNewPasswordSerializer
+from .serializers import EmailVerificationSerializer, PasswordTokenCheckSerializer, RegisterSerializer, LoginSerializer, ResetPasswordEmailRequestSerializer, SetNewPasswordSerializer, TokenObtainPairSerializer
 from .models import User
 from .utils import Util
 from .renderers import UserRenderer
@@ -24,11 +26,14 @@ from drf_yasg import openapi
 
 import jwt
 
+class MyObtainTokenPairView(TokenObtainPairView):
+    permission_classes = (AllowAny)
+    serializer_class = TokenObtainPairSerializer
 
 class ProfileAPIView(views.APIView):
     queryset = User.objects.filter(id__gte=0)
     #lookup_field = 'id'
-    serializer_class = UserDetailSerializer
+    # serializer_class = UserDetailSerializer
     #permission_classes = []
 
 
